@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <map>
 
 std::vector<std::string> parseInput(std::ifstream &input){
     std::vector<std::string> output;
@@ -16,25 +17,24 @@ std::vector<std::string> parseInput(std::ifstream &input){
 
 std::uint64_t calculatePriorities(const std::vector<std::string>& rucksackItems){
     std::uint64_t priorities = 0;
-    for(const auto &eachItem: rucksackItems){
-        // length of eachItem is always even so mid can be found by diving with 2
-        size_t mid = eachItem.size() / 2;
-        
-        // find element in the first half that is also present in the second half
-        auto it = find_if(eachItem.begin(), eachItem.begin() + mid, [&](char item){
-            return eachItem.substr(mid, mid).find(item) != std::string::npos;
+
+    // find character present in all 3 strings in the group
+    for(size_t i = 0; i < rucksackItems.size(); i += 3){
+        auto commonCharacter = std::find_if(rucksackItems.at(i).begin(), rucksackItems.at(i).end(), [&](char item){
+            return rucksackItems.at(i + 1).find(item) != std::string::npos && rucksackItems.at(i + 2).find(item) != std::string::npos;
         });
 
-        if(it != eachItem.end()){
-            if(*it >= 'a' && *it <= 'z'){
-                priorities += *it - 'a' + 1;
+        // calculate priority
+        if(commonCharacter != rucksackItems.at(i).end()){
+            if(*commonCharacter >= 'a' && *commonCharacter <= 'z'){
+                priorities += *commonCharacter - 'a' + 1;
             }
             else {
-                priorities += *it - 'A' + 27;
+                priorities += *commonCharacter - 'A' + 27;
             }
         }
     }
-
+    
     return priorities;
 }
 
