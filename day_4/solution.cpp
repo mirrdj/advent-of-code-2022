@@ -20,14 +20,17 @@ std::uint64_t countFullyContainedPairs(const std::vector<std::string>& pairs){
         std::string firstPair = std::string(eachPair.begin(), eachPair.begin() + pos);
         std::string secondPair = std::string(eachPair.begin() + pos + 1, eachPair.end());
         std::string minFirst =  std::string(firstPair.begin(), firstPair.begin() + firstPair.find("-"));
-        std::string maxFirst = std::string(firstPair.begin() + firstPair.find("-"), firstPair.end());
+        std::string maxFirst = std::string(firstPair.begin() + firstPair.find("-") + 1, firstPair.end());
         std::string minSecond =  std::string(secondPair.begin(), secondPair.begin() + secondPair.find("-"));
-        std::string maxSecond = std::string(secondPair.begin() + secondPair.find("-"), secondPair.end());
+        std::string maxSecond = std::string(secondPair.begin() + secondPair.find("-") + 1, secondPair.end());
 
-        if((std::stoull(minFirst) >= std::stoull(minSecond) && std::stoull(maxSecond) <= std::stoull(maxFirst)) || 
-            std::stoull(minSecond) >= std::stoull(minFirst) && std::stoull(maxFirst) <= std::stoull(maxSecond)){
+        if((std::stoull(maxSecond) >= std::stoull(minFirst) && std::stoull(maxSecond) <= std::stoull(maxFirst)) || 
+            (std::stoull(minSecond) >= std::stoull(minFirst) && std::stoull(minSecond) <= std::stoull(maxFirst)) ||
+            (std::stoull(minFirst) >= std::stoull(minSecond) && std::stoull(minFirst) <= std::stoull(maxSecond)) ||
+            (std::stoull(maxFirst) >= std::stoull(minSecond) && std::stoull(maxFirst) <= std::stoull(maxSecond))){
+                std::cout << minFirst << ' ' << maxFirst << " " << minSecond << " " << maxSecond << '\n';
                 count++;
-            }
+        }
     }
 
     return count;
